@@ -7,11 +7,15 @@
         </h1>
         
         <b-container>
-
             <b-row class="mb-2 justify-content-center">
-                <b-col cols="12" class="mb-2" v-for="(option , index) in getAllOptions" :key="index">
-                    <b-button variant="outline-light" class="col-6"> {{option}}</b-button>
-                   
+                <b-col cols="12" class="mb-2">
+                    <b-button
+                      v-for="(option , index) in getAllOptions" :key="index"
+                      @click="selectedOption(option , index)"
+                      :variant="buttonVariant"
+                      class="col-lg-5 mx-1 my-1"  
+                      > {{option}}</b-button>
+                                                        
                 </b-col>
             </b-row>
 
@@ -23,6 +27,7 @@
 </template>
 
 <script>
+import _ from lowdash
 export default {
     props:{
         currentQuestion: Object,
@@ -36,6 +41,26 @@ export default {
         }
     },
 
+    methods: {
+        selectedOption(option , index) {
+            if (index == "3") {
+                console.log( "success")
+            }
+            else {
+                console.log("danger")
+            }
+            
+        }
+    }, 
+
+    data() {
+        return {
+            correctAnswerClicked : "success",
+            wrongAnswerClicked : "warning", 
+            buttonVariant : "light"
+        }
+    }
+
     
 }
 </script>
@@ -45,7 +70,7 @@ export default {
         font-size: 24px;
     }
 
-    .col-6{
+    .col-lg-5{
         border-color: black;
         color: black;
     }
