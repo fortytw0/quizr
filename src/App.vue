@@ -2,27 +2,30 @@
   <div id="app">
     <b-container>
       <Header 
-      :nextQuestion="nextQuestion"
-      :previousQuestion="previousQuestion"
       :index="index"
       :total="questions.length"
       />
       <QuestionBox 
-        :currentQuestion="questions[index]"  
+        :previousQuestion="previousQuestion"
+        :currentQuestion="questions[index]"
+        :nextQuestion="nextQuestion"  
+        :index="index"
+        :total="questions.length"
       />
     </b-container>
   </div>
 </template>
 
 <script>
-import Header from './components/Header.vue'
+
 import QuestionBox from  './components/QuestionBox.vue'
+import Header from './components/Header.vue'
 
 export default {
   name: 'App',
   components: {
-    Header,
-    QuestionBox
+    QuestionBox,
+    Header
   },
 
   data() {
