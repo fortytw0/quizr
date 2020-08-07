@@ -11,67 +11,98 @@
                 <b-col cols="12" class="mb-2">
                     <b-button
                       v-for="(option , index) in getAllOptions" :key="index"
-                      @click="selectedOption(option , index)"
-                      :variant="buttonVariant"
-                      class="col-lg-5 mx-1 my-1"  
+                      class="col-lg-5 mx-1 my-1"
+                      :class="{'btn btn-success' : optionIsCorrect(option , index),  
+                               'btn btn-danger':selectedOptionIsNotCorrect(option , index)}"
+                      @click="selectedAnswerPosition=index"
                       > {{option}}</b-button>
                                                         
                 </b-col>
             </b-row>
+            <b-row>
+                <b-col class="col-6" align="left">
+                    <b-nav-item active> <b-button variant="outline-primary" @click="previousQuestion">Previous</b-button></b-nav-item>
+                </b-col>
+                <b-col align="right">
+                    <b-nav-item><b-button variant="outline-success" @click="nextQuestion">Next</b-button></b-nav-item>
+                </b-col>
+            </b-row>
 
         </b-container>
-
-            <b-button variant="danger" href="#">Submit</b-button>
         </b-jumbotron>
     </div>
 </template>
 
 <script>
-import _ from lowdash
+
+import _ from 'lodash';
+import '../assets/bootstrap4-neon-glow.min.css'
 export default {
     props:{
+        previousQuestion : Function,
         currentQuestion: Object,
+        nextQuestion : Function, 
+        index : Number,
+        total : Number
+
+    },
+
+    data() {
+        return {
+            isCorrectAnswerClicked : null,
+            selectedAnswerPosition : null,
+            correctAnswerPosition : 3
+        }
     },
 
     computed: {
         getAllOptions() {
             let allOptions = [...this.currentQuestion.incorrect_answers] 
             allOptions.push(this.currentQuestion.correct_answer)
-            return allOptions
+            let shuffledOptions = _.shuffle(allOptions)
+            this.resetData()
+            return shuffledOptions
         }
     },
+    
 
     methods: {
-        selectedOption(option , index) {
-            if (index == "3") {
-                console.log( "success")
+        optionIsCorrect(option , index) {
+            console.log(index)
+            if (this.selectedAnswerPosition !== null) {
+                if (this.currentQuestion.correct_answer === option) {
+                    return true
+                }
+            }   
+            else {
+                return false
+            }    
+        },
+
+        selectedOptionIsNotCorrect(option , index) {
+            if (this.selectedAnswerPosition === index) {
+                if (this.currentQuestion.correct_answer !== option) {
+                    return true
+                }
             }
             else {
-                console.log("danger")
+                return false
             }
-            
+        },
+
+        resetData() {
+            this.isCorrectAnswerClicked = null;
+            this.selectedAnswerPosition = null;
+            this.correctAnswerPosition = 3;
         }
     }, 
-
-    data() {
-        return {
-            correctAnswerClicked : "success",
-            wrongAnswerClicked : "warning", 
-            buttonVariant : "light"
-        }
-    }
-
-    
 }
 </script>
 
 <style scoped>
     #question {
         font-size: 24px;
-    }
-
-    .col-lg-5{
-        border-color: black;
-        color: black;
+        font-family:monospace;
+        color:lightgreen
     }
 </style>
